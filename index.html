@@ -28,6 +28,15 @@
             width: 100vw;
         }
 
+        /* Ocultar reproductores de controles nativos en Android WebViews */
+        video::-webkit-media-controls,
+        video::-webkit-media-controls-start-playback-button,
+        video::-webkit-media-controls-play-button {
+            display: none !important;
+            -webkit-appearance: none !important;
+            opacity: 0 !important;
+        }
+
         /* Live Photo Pulsing Ring Animation */
         @keyframes livePulse {
             0% { transform: scale(1); opacity: 0.85; }
@@ -107,9 +116,9 @@
             </button>
         </div>
 
-        <div class="relative flex-1 my-2 mx-2 rounded-3xl overflow-hidden bg-zinc-950 flex items-center justify-center border border-white/10 shadow-2xl">
+        <div id="viewfinderArea" class="relative flex-1 my-2 mx-2 rounded-3xl overflow-hidden bg-zinc-950 flex items-center justify-center border border-white/10 shadow-2xl cursor-pointer">
             <!-- Camera Viewfinder Stream -->
-            <video id="cameraStream" autoplay playsinline muted class="w-full h-full object-cover"></video>
+            <video id="cameraStream" autoplay playsinline webkit-playsinline muted class="w-full h-full object-cover pointer-events-none"></video>
             
             <!-- Hidden Capture Canvas -->
             <canvas id="captureCanvas" class="hidden"></canvas>
@@ -195,7 +204,7 @@
                 <img id="viewerStillImg" class="w-full h-full object-contain max-h-[75vh]" alt="Live Photo" />
                 
                 <!-- Motion Video Clip Layer -->
-                <video id="viewerMotionVideo" playsinline loop muted class="hidden absolute inset-0 w-full h-full object-contain"></video>
+                <video id="viewerMotionVideo" playsinline webkit-playsinline loop muted class="hidden absolute inset-0 w-full h-full object-contain"></video>
 
                 <!-- Live Badge Indicator -->
                 <div id="viewerLiveBadge" class="absolute top-3 left-3 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-yellow-400 text-xs font-semibold shadow-lg">
@@ -324,6 +333,7 @@
         let db = null;
 
         // DOM Element Cache
+        const viewfinderArea = document.getElementById('viewfinderArea');
         const cameraStream = document.getElementById('cameraStream');
         const captureCanvas = document.getElementById('captureCanvas');
         const flashBtn = document.getElementById('flashBtn');
@@ -346,13 +356,4 @@
         const viewerStillImg = document.getElementById('viewerStillImg');
         const viewerMotionVideo = document.getElementById('viewerMotionVideo');
         const viewerBadgeText = document.getElementById('viewerBadgeText');
-        const prevPhotoBtn = document.getElementById('prevPhotoBtn');
-        const nextPhotoBtn = document.getElementById('nextPhotoBtn');
-        const deletePhotoBtn = document.getElementById('deletePhotoBtn');
-        const galleryCounterText = document.getElementById('galleryCounterText');
-        
-        // Export Sheet Elements
-        const exportModalBtn = document.getElementById('exportModalBtn');
-        const quickExportBtn = document.getElementById('quickExportBtn');
-        const exportModal = document.getElementById('exportModal');
-        const closeExportBtn = document.get
+        const prevPhotoBtn = document.getElementById('prevPhotoBtn')
